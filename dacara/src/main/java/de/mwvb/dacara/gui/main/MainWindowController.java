@@ -107,7 +107,6 @@ public class MainWindowController {
 			if (data.getRecordsAffected() == null) {
 				setupColumns(data, columns);
 				addRows(data, items);
-				// TODO optimal column width
 				// TODO show display time
 			} else {
 				status.setText("Records affected: " + formatNumber(data.getRecordsAffected()));
@@ -133,7 +132,6 @@ public class MainWindowController {
 			final ObservableList<TableColumn<ObservableList<String>, ?>> columns) {
 		for (int i = 0; i < data.getColumnHeaders().size(); i++) {
 			TableColumn<ObservableList<String>, String> col = new TableColumn<>(data.getColumnHeaders().get(i));
-			col.setPrefWidth(200);
 			col.setCellValueFactory(getCellValueFactory(i));
 			columns.add(col);
 		}
