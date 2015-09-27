@@ -1,4 +1,4 @@
-Dacara 2
+# Dacara 2 #
 
 Dacara is a simple tool for executing SQL commands like SELECT, INSERT, UPDATE and DELETE.
 The data will be shown in a nice grid.
