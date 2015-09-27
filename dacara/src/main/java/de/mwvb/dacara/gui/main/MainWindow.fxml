@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<?language javascript?>
+<?import java.net.*?>
+<?import javafx.geometry.*?>
+<?import javafx.scene.control.*?>
+<?import javafx.scene.layout.*?>
+<?import javafx.scene.text.*?>
+
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="de.mwvb.dacara.gui.main.MainWindow"
+	styleClass="root">
+	<!-- TODO window icon -->
+	<stylesheets>
+		<URL value="@../style.css" />
+	</stylesheets>
+	<padding><Insets top="16" right="16" bottom="8" left="16"/></padding>
+
+	<top>
+		<VBox>
+			<HBox>
+				<padding><Insets bottom="12"/></padding>
+				<ComboBox fx:id="databases" onAction="#databaseSelected"/>
+				<!-- TODO how?  full width -->
+				<!-- TODO tooltip -->
+			</HBox>
+			
+			<HBox>
+				<padding><Insets bottom="12"/></padding>
+				<ComboBox fx:id="history" onAction="#historySelected"/>
+				<!-- TODO how?  full width -->
+				<!-- TODO tooltip -->
+			</HBox>
+			
+			<TextArea fx:id="sql" minHeight="70" maxHeight="100"/>
+			<!-- TODO Courier -->
+			
+			<HBox spacing="12">
+				<padding><Insets top="12" bottom="12"/></padding>
+				<Button text="E_xecute" onAction="#execute" minWidth="88"/>
+				<!-- TODO F5 for Execute -->
+			</HBox>
+		</VBox>
+	</top>
+
+	<center>
+		<!-- TODO splitter -->
+		<TableView fx:id="grid"/>
+	</center>
+	
+	<bottom>
+		<HBox spacing="12">
+			<padding><Insets top="8"/></padding>
+			<Label fx:id="status"/>
+		</HBox>
+	</bottom>
+
+</BorderPane>
+
+ 

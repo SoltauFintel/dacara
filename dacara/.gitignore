@@ -1,0 +1,9 @@
+/bin/
+/target/
+/drivers/
+dacara-databases.xml
+dacara-sql.xml
+TODO.txt
+/.settings/
+.classpath
+.project
