@@ -6,12 +6,9 @@
 <?import javafx.scene.layout.*?>
 <?import javafx.scene.text.*?>
 
-<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="de.mwvb.dacara.gui.main.MainWindowController"
-	styleClass="root">
+<BorderPane xmlns:fx="http://javafx.com/fxml" fx:controller="de.mwvb.dacara.gui.main.MainWindowController">
 	<!-- TODO window icon -->
-	<stylesheets>
-		<URL value="@../style.css" />
-	</stylesheets>
+	<stylesheets><URL value="@../style.css"/></stylesheets>
 	<padding><Insets top="16" right="16" bottom="8" left="16"/></padding>
 
 	<top>
