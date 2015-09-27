@@ -54,7 +54,7 @@ public class MainWindowController {
 	private boolean historySelectedOn = true;
 	
 	@FXML
-	void initialize() {
+	protected void initialize() {
 		databases.setPromptText("Databases");
 		for (String name : cfg.getDatabaseNames()) {
 			databases.getItems().add(name);
@@ -75,6 +75,18 @@ public class MainWindowController {
 		Platform.runLater(() -> sql.requestFocus());
 		
 		// TODO load driver in parallel thread, so executing the first command will be faster
+	}
+	
+	@FXML
+	protected void databaseSelected() {
+		cfg.setCurrentDatabase(databases.getSelectionModel().getSelectedIndex());
+	}
+
+	@FXML
+	protected void historySelected() {
+		if (historySelectedOn) {
+			sql.setText(history.getSelectionModel().getSelectedItem());
+		}
 	}
 	
 	@FXML
@@ -112,44 +124,11 @@ public class MainWindowController {
 			sql.requestFocus();
 		}
 	}
-
-	private void showHistory() {
-		historySelectedOn = false;
-		// I'm not sure which behaviour would be good - int index = history.getSelectionModel().getSelectedIndex();
-		final ObservableList<String> items = history.getItems();
-		items.clear();
-		for (String a : cfg.getHistoryList()) {
-			items.add(a);
-		}
-		//history.getSelectionModel().clearAndSelect(-1);
-		historySelectedOn = true;
+	
+	private String formatNumber(int no) {
+		return NumberFormat.getIntegerInstance().format(no);
 	}
 	
-	@FXML
-	protected void historySelected() {
-		if (historySelectedOn) {
-			sql.setText(history.getSelectionModel().getSelectedItem());
-		}
-	}
-
-	private void addRows(ExecuteResult data, final ObservableList<ObservableList<String>> items) {
-		final Iterator<List<String>> iter = data.getRows();
-		try {
-			int n = 0;
-			while (iter.hasNext()) {
-				items.add(FXCollections.observableArrayList(iter.next()));
-				n++;
-			}
-			if (n == 1) {
-				status.setText(n + " record");
-			} else {
-				status.setText(formatNumber(n) + " records");
-			}
-		} finally {
-			close(iter);
-		}
-	}
-
 	private void setupColumns(ExecuteResult data,
 			final ObservableList<TableColumn<ObservableList<String>, ?>> columns) {
 		for (int i = 0; i < data.getColumnHeaders().size(); i++) {
@@ -170,6 +149,24 @@ public class MainWindowController {
 		};
 	}
 
+	private void addRows(ExecuteResult data, final ObservableList<ObservableList<String>> items) {
+		final Iterator<List<String>> iter = data.getRows();
+		try {
+			int n = 0;
+			while (iter.hasNext()) {
+				items.add(FXCollections.observableArrayList(iter.next()));
+				n++;
+			}
+			if (n == 1) {
+				status.setText(n + " record");
+			} else {
+				status.setText(formatNumber(n) + " records");
+			}
+		} finally {
+			close(iter);
+		}
+	}
+
 	private void close(final Iterator<List<String>> iter) {
 		if (iter instanceof Closeable) {
 			try {
@@ -180,12 +177,15 @@ public class MainWindowController {
 		}
 	}
 	
-	@FXML
-	protected void databaseSelected() {
-		cfg.setCurrentDatabase(databases.getSelectionModel().getSelectedIndex());
-	}
-	
-	private String formatNumber(int no) {
-		return NumberFormat.getIntegerInstance().format(no);
+	private void showHistory() {
+		historySelectedOn = false;
+		// I'm not sure which behaviour would be good - int index = history.getSelectionModel().getSelectedIndex();
+		final ObservableList<String> items = history.getItems();
+		items.clear();
+		for (String a : cfg.getHistoryList()) {
+			items.add(a);
+		}
+		//history.getSelectionModel().clearAndSelect(-1);
+		historySelectedOn = true;
 	}
 }
