@@ -33,19 +33,11 @@ public class DacaraSQLExecutor implements SQLExecutor {
 	@Override
 	public ExecuteResult execute(final String sql) {
 		loadDriver();
-		Connection conn = null;
 		try {
-			conn = DriverManager.getConnection(cfg.getConnectionString(), cfg.getUser(), cfg.getPassword());
+			Connection conn = DriverManager.getConnection(cfg.getConnectionString(), cfg.getUser(), cfg.getPassword());
 			return execute(conn, sql);
 		} catch (SQLException e) {
 			throw new RuntimeException("Error accessing database\n" + e.getMessage(), e);
-		} finally {
-			if (conn != null) {
-				try {
-					conn.close();
-				} catch (SQLException ignore) {
-				}
-			}
 		}
 	}
 	

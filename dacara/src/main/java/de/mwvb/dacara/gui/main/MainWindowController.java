@@ -6,11 +6,6 @@ import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.List;
 
-import com.google.inject.Inject;
-
-import de.mwvb.dacara.Configuration;
-import de.mwvb.dacara.ExecuteResult;
-import de.mwvb.dacara.SQLExecutor;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -27,6 +22,12 @@ import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.util.Callback;
+
+import com.google.inject.Inject;
+
+import de.mwvb.dacara.Configuration;
+import de.mwvb.dacara.ExecuteResult;
+import de.mwvb.dacara.SQLExecutor;
 
 /**
  * Main window controller
@@ -109,7 +110,7 @@ public class MainWindowController {
 				addRows(data, items);
 				// TODO show display time
 			} else {
-				status.setText("Records affected: " + formatNumber(data.getRecordsAffected()));
+				status.setText("Records affected: " + formatNumber(data.getRecordsAffected().intValue()));
 			}
 
 			cfg.addToHistory(aSQL);

@@ -15,8 +15,11 @@ import de.mwvb.dacara.ExecuteResult;
  */
 public class SelectCE implements CommandExecutor {
 
+    /**
+     * Call getRows().close() on the result!
+     */
 	@Override
-	public ExecuteResult execute(Connection conn, String sql) throws SQLException {
+	public ExecuteResult execute(final Connection conn, final String sql) throws SQLException {
 		if (!sql.trim().toLowerCase().startsWith("select")) {
 			return null; // not responsible
 		}
@@ -27,7 +30,7 @@ public class SelectCE implements CommandExecutor {
 		return new ExecuteResult() {
 			@Override
 			public RecordsIterator getRows() {
-				return new RecordsIterator(rs);
+				return new RecordsIterator(conn, rs);
 			}
 			
 			@Override

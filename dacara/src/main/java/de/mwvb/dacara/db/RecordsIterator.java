@@ -2,6 +2,7 @@ package de.mwvb.dacara.db;
 
 import java.io.Closeable;
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -16,9 +17,11 @@ import java.util.List;
  * @author Marcus Warm
  */
 public class RecordsIterator implements Iterator<List<String>>, Closeable {
+    private final Connection conn;
 	private final ResultSet rs;
 	
-	public RecordsIterator(ResultSet rs) {
+	public RecordsIterator(final Connection conn, final ResultSet rs) {
+	    this.conn = conn;
 		this.rs = rs;
 	}
 	
@@ -50,6 +53,9 @@ public class RecordsIterator implements Iterator<List<String>>, Closeable {
 		try {
 			if (rs != null) {
 				rs.close();
+			}
+			if (conn != null) {
+			    conn.close();
 			}
 		} catch (SQLException e) {
 			throw new IOException(e);

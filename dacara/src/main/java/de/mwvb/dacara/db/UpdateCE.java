@@ -16,12 +16,16 @@ public class UpdateCE implements CommandExecutor {
 
 	@Override
 	public ExecuteResult execute(Connection conn, String sql) throws SQLException {
-		final int ra = conn.createStatement().executeUpdate(sql);
-		return new ExecuteResult() {
-			@Override
-			public Integer getRecordsAffected() {
-				return ra;
-			}
-		};
+	    try {
+	        final int ra = conn.createStatement().executeUpdate(sql);
+    		return new ExecuteResult() {
+    			@Override
+    			public Integer getRecordsAffected() {
+    				return Integer.valueOf(ra);
+    			}
+    		};
+	    } finally {
+	        conn.close();
+	    }
 	}
 }
