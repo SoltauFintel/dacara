@@ -14,6 +14,7 @@ import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
+import javafx.scene.control.Button;
 import javafx.scene.control.ButtonType;
 import javafx.scene.control.ComboBox;
 import javafx.scene.control.Label;
@@ -47,6 +48,8 @@ public class MainWindowController {
 	private ComboBox<String> history;
 	@FXML
 	private TextArea sql;
+	@FXML
+	private Button execute;
 	@FXML
 	private TableView<ObservableList<String>> grid;
 	@FXML
@@ -91,11 +94,11 @@ public class MainWindowController {
 	}
 	
 	@FXML
-	protected void execute() {
+	protected void onExecute() {
 		// TODO how?  WAIT cursor
+		// TODO lock controls
 		try {
 			// TODO how?  status "loading..."
-			// TODO lock controls
 			final ObservableList<ObservableList<String>> items = grid.getItems();
 			items.clear();
 			final ObservableList<TableColumn<ObservableList<String>, ?>> columns = grid.getColumns();

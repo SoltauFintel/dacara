@@ -32,7 +32,7 @@
 			
 			<HBox spacing="12">
 				<padding><Insets top="12" bottom="12"/></padding>
-				<Button text="E_xecute" onAction="#execute" minWidth="88"/>
+				<Button fx:id="execute" text="E_xecute" onAction="#onExecute" minWidth="88"/>
 				<!-- TODO F5 for Execute -->
 			</HBox>
 		</VBox>
