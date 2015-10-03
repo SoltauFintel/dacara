@@ -1,6 +1,6 @@
 package de.mwvb.dacara.config;
 
-import de.mwvb.dacara.base.xml.XMLElement;
+import de.mwvb.base.xml.XMLElement;
 
 /**
  * All informations for opening a database

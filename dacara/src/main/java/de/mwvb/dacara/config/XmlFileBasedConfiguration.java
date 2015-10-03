@@ -7,9 +7,9 @@ import java.util.List;
 
 import com.google.inject.Singleton;
 
+import de.mwvb.base.xml.XMLDocument;
+import de.mwvb.base.xml.XMLElement;
 import de.mwvb.dacara.Configuration;
-import de.mwvb.dacara.base.xml.XMLDocument;
-import de.mwvb.dacara.base.xml.XMLElement;
 
 /**
  * This Configuration implementation reads all parameters from XML files.
