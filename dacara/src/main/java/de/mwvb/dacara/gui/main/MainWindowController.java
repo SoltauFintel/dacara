@@ -6,12 +6,19 @@ import java.text.NumberFormat;
 import java.util.Iterator;
 import java.util.List;
 
+import com.google.inject.Inject;
+
+import de.mwvb.dacara.Configuration;
+import de.mwvb.dacara.ExecuteResult;
+import de.mwvb.dacara.SQLExecutor;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.concurrent.Task;
 import javafx.fxml.FXML;
+import javafx.scene.Cursor;
 import javafx.scene.control.Alert;
 import javafx.scene.control.Alert.AlertType;
 import javafx.scene.control.Button;
@@ -24,18 +31,13 @@ import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
 import javafx.util.Callback;
 
-import com.google.inject.Inject;
-
-import de.mwvb.dacara.Configuration;
-import de.mwvb.dacara.ExecuteResult;
-import de.mwvb.dacara.SQLExecutor;
-
 /**
  * Main window controller
  * 
  * @author Marcus Warm
  */
 // TODO MVC?
+// TODO idea: content of sql textbox survives program end/restart
 public class MainWindowController {
 	@Inject
 	private SQLExecutor logic;
@@ -93,42 +95,72 @@ public class MainWindowController {
 		}
 	}
 	
+	private transient ExecuteResult data;
+	private transient ObservableList<ObservableList<String>> items;
+	private transient ObservableList<TableColumn<ObservableList<String>, ?>> columns;
+	private transient long loadTime;
 	@FXML
 	protected void onExecute() {
-		// TODO how?  WAIT cursor
-		// TODO lock controls
-		try {
-			// TODO how?  status "loading..."
-			final ObservableList<ObservableList<String>> items = grid.getItems();
-			items.clear();
-			final ObservableList<TableColumn<ObservableList<String>, ?>> columns = grid.getColumns();
-			columns.clear();
-
-			final String aSQL = sql.getText().trim();
-			ExecuteResult data = logic.execute(aSQL);
-			// TODO display execution time
+		items = grid.getItems();
+		columns = grid.getColumns();
+		execute.setDisable(true);
+		data = null;
+		sql.getScene().setCursor(Cursor.WAIT);
+		status.setText("loading...");
+		final String aSQL = sql.getText().trim();
+		
+		Task<Void> task = new Task<Void>() {
+			protected Void call() {
+				long start = System.currentTimeMillis();
+				data = logic.execute(aSQL);
+				loadTime = (System.currentTimeMillis() - start) / 1000;
+				return null;
+			};
+		};
+		task.setOnFailed(event -> {
+			clearTable(); // should at begin of onExecute()
 			
+			new Alert(AlertType.ERROR, task.getException().getMessage(), ButtonType.OK).show();
+
+			status.setText("error");
+			// duplicate code :-(
+			execute.setDisable(false);
+			sql.getScene().setCursor(Cursor.DEFAULT);
+			sql.requestFocus();
+		});
+		task.setOnSucceeded(event -> {
+			clearTable(); // should at begin of onExecute()
+			
+			String timetext = "load time: " + formatNumber(loadTime) + " seconds"; // TODO singular
+			String statustext;
 			if (data.getRecordsAffected() == null) {
+				long start = System.currentTimeMillis();
 				setupColumns(data, columns);
 				addRows(data, items);
-				// TODO show display time
+				long time = (System.currentTimeMillis() - start) / 1000;
+				statustext = formatNumber(items.size()) + " records loaded, "; // TODO singular
+				timetext += ", display time: " + formatNumber(time) + " seconds"; // TODO singular
 			} else {
-				status.setText("Records affected: " + formatNumber(data.getRecordsAffected().intValue()));
+				statustext = "Records affected: " + formatNumber(data.getRecordsAffected().intValue()) + ", ";
 			}
 
 			cfg.addToHistory(aSQL);
 			showHistory();
-		} catch(Exception e) {
-			new Alert(AlertType.ERROR, e.getMessage(), ButtonType.OK).show();
-			status.setText("error");
-		} finally {
-			// TODO unlock controls
-			// TODO DEFAULT cursor
+			
+			status.setText(statustext + timetext);
+			execute.setDisable(false);
+			sql.getScene().setCursor(Cursor.DEFAULT);
 			sql.requestFocus();
-		}
+		});
+		new Thread(task).start();
+	}
+
+	private void clearTable() {
+		items.clear();
+		columns.clear();
 	}
 	
-	private String formatNumber(int no) {
+	private String formatNumber(long no) {
 		return NumberFormat.getIntegerInstance().format(no);
 	}
 	
