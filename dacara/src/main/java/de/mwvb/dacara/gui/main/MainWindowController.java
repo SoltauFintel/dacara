@@ -11,6 +11,7 @@ import com.google.inject.Inject;
 import de.mwvb.dacara.Configuration;
 import de.mwvb.dacara.ExecuteResult;
 import de.mwvb.dacara.SQLExecutor;
+import de.mwvb.dacara.gui.Window;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.value.ObservableValue;
@@ -45,7 +46,7 @@ public class MainWindowController {
 	@Inject
 	private Configuration cfg;
 
-	@FXML
+	@FXML 
 	private ComboBox<String> databases;
 	@FXML
 	private ComboBox<String> history;
@@ -63,9 +64,16 @@ public class MainWindowController {
 	private Label status;
 	
 	private boolean historySelectedOn = true;
+	private transient ExecuteResult data;
+	private transient ObservableList<ObservableList<String>> items;
+	private transient ObservableList<TableColumn<ObservableList<String>, ?>> columns;
+	private transient long loadTime;
 	
 	@FXML
 	protected void initialize() {
+		// Register this Controller instance to corresponding Window instance
+		Window.registerController(this);
+		
 		databases.setPromptText("Databases");
 		for (String name : cfg.getDatabaseNames()) {
 			databases.getItems().add(name);
@@ -100,10 +108,6 @@ public class MainWindowController {
 		}
 	}
 	
-	private transient ExecuteResult data;
-	private transient ObservableList<ObservableList<String>> items;
-	private transient ObservableList<TableColumn<ObservableList<String>, ?>> columns;
-	private transient long loadTime;
 	@FXML
 	protected void onExecute() {
 		items = grid.getItems();

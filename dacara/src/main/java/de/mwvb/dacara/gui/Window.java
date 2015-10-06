@@ -1,6 +1,8 @@
 package de.mwvb.dacara.gui;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import de.mwvb.dacara.Start;
 import javafx.fxml.FXMLLoader;
@@ -16,7 +18,11 @@ import javafx.util.Callback;
  * 
  * @author Marcus Warm
  */
-public abstract class Window {
+public abstract class Window<CTR> {
+	/** ctr, latestedId and myId is for Window <-> Controller binding */
+	private static Map<Integer, Object> ctr = new HashMap<>();
+	private static Integer latestId;
+	private final Integer myId;
 	private final String title;
 	private final int width;
 	private final int height;
@@ -24,6 +30,8 @@ public abstract class Window {
 	private final int minHeight;
 	
 	public Window(String title, int width, int height, int minWidth, int minHeight) {
+		this.myId = hashCode();
+		latestId = this.myId;
 		this.title = title;
 		this.width = width;
 		this.height = height;
@@ -31,9 +39,15 @@ public abstract class Window {
 		this.minHeight = minHeight;
 	}
 	
+	public static void registerController(Object controller) {
+		ctr.put(latestId, controller);
+	}
+	
 	public void show(Stage stage) {
 		stage.getIcons().add(new Image(getClass().getResourceAsStream(getClass().getSimpleName() + ".png")));
-		stage.setScene(new Scene(root(), width, height));
+		Scene scene = new Scene(root(), width, height);
+		stage.setScene(scene);
+		keyBindings(scene);
         stage.setMinHeight(minHeight);
         stage.setMinWidth(minWidth);
         stage.setTitle(title);
@@ -54,5 +68,12 @@ public abstract class Window {
 		} catch (IOException e) {
 			throw new RuntimeException(e);
 		}
+	}
+
+	protected abstract void keyBindings(final Scene scene);
+	
+	@SuppressWarnings("unchecked")
+	protected CTR getController() {
+		return (CTR) ctr.get(myId);
 	}
 }
