@@ -5,12 +5,15 @@ import java.util.HashMap;
 import java.util.Map;
 
 import de.mwvb.dacara.Start;
+import de.mwvb.dacara.config.TinyConfig;
+import javafx.event.EventHandler;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.stage.Stage;
+import javafx.stage.WindowEvent;
 import javafx.util.Callback;
 
 /**
@@ -43,7 +46,7 @@ public abstract class Window<CTR> {
 		ctr.put(latestId, controller);
 	}
 	
-	public void show(Stage stage) {
+	public void show(final Stage stage) {
 		stage.getIcons().add(new Image(getClass().getResourceAsStream(getClass().getSimpleName() + ".png")));
 		Scene scene = new Scene(root(), width, height);
 		stage.setScene(scene);
@@ -51,10 +54,39 @@ public abstract class Window<CTR> {
         stage.setMinHeight(minHeight);
         stage.setMinWidth(minWidth);
         stage.setTitle(title);
-        // TODO restore window position and size
+        restoreWindowPosition(stage);
+        stage.setOnCloseRequest(new EventHandler<WindowEvent>() {
+			@Override
+			public void handle(WindowEvent ev) {
+				// save window position
+				try {
+					String par = stage.getX() + ";" + stage.getY() + ";" + stage.getWidth() + ";" + stage.getHeight() + ";"
+							+ stage.isMaximized();
+					TinyConfig.save(getWindowPosConfigName(), par);
+				} catch (Exception ignored) {
+				}
+			}
+        });
         stage.show();
 	}
 	
+	private void restoreWindowPosition(final Stage stage) {
+		try {
+			String par = TinyConfig.load(getWindowPosConfigName());
+			String w[] = par.split(";");
+			stage.setX(Double.parseDouble(w[0]));
+			stage.setY(Double.parseDouble(w[1]));
+			stage.setWidth(Double.parseDouble(w[2]));
+			stage.setHeight(Double.parseDouble(w[3]));
+			stage.setMaximized("true".equals(w[4]));
+		} catch (Exception ignored) {
+		}
+	}
+
+	private String getWindowPosConfigName() {
+		return getClass().getSimpleName() + "_position";
+	}
+
 	protected Parent root() {
 		try {
 			Callback<Class<?>, Object> guiceControllerFactory = new Callback<Class<?>, Object>() {

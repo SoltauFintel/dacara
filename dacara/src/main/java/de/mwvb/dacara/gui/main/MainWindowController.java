@@ -39,6 +39,7 @@ import javafx.util.Callback;
  */
 // TODO MVC?
 // TODO idea: content of sql textbox survives program end/restart
+// TODO problem: history save handling if there are 2+ windows open - it should be global
 public class MainWindowController {
 	@Inject
 	private SQLExecutor logic;
