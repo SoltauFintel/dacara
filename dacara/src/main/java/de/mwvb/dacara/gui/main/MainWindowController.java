@@ -140,15 +140,15 @@ public class MainWindowController {
 		task.setOnSucceeded(event -> {
 			clearTable(); // should at begin of onExecute()
 			
-			String timetext = "load time: " + formatNumber(loadTime) + " seconds"; // TODO singular
+			String timetext = "load time: " + plural(loadTime, " second", " seconds");
 			String statustext;
 			if (data.getRecordsAffected() == null) {
 				long start = System.currentTimeMillis();
 				setupColumns(data, columns);
 				addRows(data, items);
 				long time = (System.currentTimeMillis() - start) / 1000;
-				statustext = formatNumber(items.size()) + " records loaded, "; // TODO singular
-				timetext += ", display time: " + formatNumber(time) + " seconds"; // TODO singular
+				statustext = plural(items.size(), " record", " records") + " loaded, ";
+				timetext += ", display time: " +  plural(time, " second", " seconds");
 			} else {
 				statustext = "Records affected: " + formatNumber(data.getRecordsAffected().intValue()) + ", ";
 			}
@@ -162,6 +162,10 @@ public class MainWindowController {
 			sql.requestFocus();
 		});
 		new Thread(task).start();
+	}
+	
+	private String plural(long number, String singular, String plural) {
+		return formatNumber(number) + (number == 1 ? singular : plural);
 	}
 
 	@FXML
