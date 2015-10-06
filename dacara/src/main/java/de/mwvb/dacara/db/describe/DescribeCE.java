@@ -44,7 +44,7 @@ public class DescribeCE implements CommandExecutor {
 			
 			@Override
 			public ResultIterator getRows() {
-				return new TableDescriptionIterator(m);
+				return new TableDescriptionIterator(m, conn);
 			}
 		};
 	}

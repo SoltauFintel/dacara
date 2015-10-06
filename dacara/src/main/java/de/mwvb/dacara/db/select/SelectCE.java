@@ -3,7 +3,6 @@ package de.mwvb.dacara.db.select;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
 import de.mwvb.dacara.ExecuteResult;
@@ -31,21 +30,19 @@ public class SelectCE implements CommandExecutor {
 		return new ExecuteResult() {
 			@Override
 			public RecordsIterator getRows() {
-				return new RecordsIterator(conn, rs);
+				return new RecordsIterator(conn, rs, new ColumnNameFilter());
 			}
 			
 			@Override
 			public List<String> getColumnHeaders() {
 				try {
-					List<String> ret = new ArrayList<>();
-					for (int i = 1; i <= rs.getMetaData().getColumnCount(); i++) {
-						ret.add(rs.getMetaData().getColumnName(i));
-					}
-					return ret;
+					return RecordsIterator.getColumnHeaders(rs.getMetaData(), new ColumnNameFilter());
 				} catch (SQLException e) {
 					throw new RuntimeException(e);
 				}
 			}
 		};
 	}
+	
+	
 }

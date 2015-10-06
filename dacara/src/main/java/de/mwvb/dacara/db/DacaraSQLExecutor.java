@@ -15,6 +15,7 @@ import de.mwvb.dacara.SQLExecutor;
 import de.mwvb.dacara.base.ClassFactory;
 import de.mwvb.dacara.db.describe.DescribeCE;
 import de.mwvb.dacara.db.select.SelectCE;
+import de.mwvb.dacara.db.tables.TablesCE;
 
 /**
  * @author Marcus Warm
@@ -28,7 +29,18 @@ public class DacaraSQLExecutor implements SQLExecutor {
 	public DacaraSQLExecutor() {
 		commandExecutors.add(new SelectCE());
 		commandExecutors.add(new DescribeCE());
-		// TODO tables command
+		commandExecutors.add(new TablesCE());
+		commandExecutors.add(new CommandExecutor() {
+			@Override
+			public ExecuteResult execute(Connection conn, String sql) throws SQLException {
+				if (!sql.trim().isEmpty()) {
+					return null; // not responsible
+				}
+				throw new RuntimeException("Please enter SQL!\n\n"
+						+ "You can also enter \"tables\" to list all table names"
+						+ "\nor \"desc <TABLE NAME>\" to list all table columns.");
+			}
+		});
 		commandExecutors.add(new UpdateCE()); // last!
 	}
 	

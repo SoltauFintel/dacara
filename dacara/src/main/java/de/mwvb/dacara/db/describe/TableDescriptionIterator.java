@@ -1,6 +1,7 @@
 package de.mwvb.dacara.db.describe;
 
 import java.io.IOException;
+import java.sql.Connection;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.util.ArrayList;
@@ -15,10 +16,12 @@ import de.mwvb.dacara.db.ResultIterator;
  */
 public class TableDescriptionIterator implements ResultIterator {
 	private final ResultSetMetaData m;
+	private final Connection conn;
 	private int columnNumber = 0;
 	
-	public TableDescriptionIterator(final ResultSetMetaData m) {
+	public TableDescriptionIterator(final ResultSetMetaData m, final Connection conn) {
 		this.m = m;
+		this.conn = conn;
 	}
 	
 	@Override
@@ -34,10 +37,10 @@ public class TableDescriptionIterator implements ResultIterator {
 		List<String> ret = new ArrayList<>();
 		ret.add("Column name");
 		ret.add("Type");
-		ret.add("Precision");
-		ret.add("Scale");
+		ret.add("Size"); // ret.add("Precision");
+		//ret.add("Scale");
 		ret.add("Nullable");
-		ret.add("AutoIncr");
+		//ret.add("AutoIncr");
 		return ret;
 	}
 	
@@ -50,17 +53,17 @@ public class TableDescriptionIterator implements ResultIterator {
 			final int t = m.getColumnType(columnNumber);
 			cells.add(getType(t));
 			cells.add("" + m.getPrecision(columnNumber));
-			cells.add(hasScale(t) ? "" + m.getScale(columnNumber) : "");
+			//cells.add(hasScale(t) ? "" + m.getScale(columnNumber) : "");
 			cells.add(m.isNullable(columnNumber) == ResultSetMetaData.columnNoNulls ? "NOT NULL" : "NULL");
-			cells.add(m.isAutoIncrement(columnNumber) ? "yes" : "");
+			//cells.add(m.isAutoIncrement(columnNumber) ? "yes" : "");
 			return cells;
 		} catch (SQLException e) {
 			throw new RuntimeException(e);
 		}
 	}
 	
-	private String getType(int t) {
-		switch (t) {
+	private String getType(final int type) {
+		switch (type) {
 		case java.sql.Types.VARCHAR: return "VARCHAR";
 		case java.sql.Types.CHAR: return "char";
 		case java.sql.Types.INTEGER: return "Integer";
@@ -86,12 +89,12 @@ public class TableDescriptionIterator implements ResultIterator {
 		case java.sql.Types.NCHAR: return "nchar";
 		case java.sql.Types.NVARCHAR: return "NVARCHAR";
 		case java.sql.Types.ROWID: return "Row Id";
-		default: return "" + t;
+		default: return "" + type;
 		}
 	}
 	
-	private boolean hasScale(int t) {
-		switch (t) {
+	boolean hasScale(final int type) {
+		switch (type) {
 		case java.sql.Types.FLOAT: 
 		case java.sql.Types.DOUBLE:
 		case java.sql.Types.DECIMAL:
@@ -104,5 +107,10 @@ public class TableDescriptionIterator implements ResultIterator {
 
 	@Override
 	public void close() throws IOException {
+		try {
+			conn.close();
+		} catch (SQLException e) {
+			throw new RuntimeException(e);
+		}
 	}
 }
