@@ -3,14 +3,13 @@ package de.mwvb.dacara.gui.main;
 import java.io.Closeable;
 import java.io.IOException;
 import java.text.NumberFormat;
-import java.util.Iterator;
-import java.util.List;
 
 import com.google.inject.Inject;
 
 import de.mwvb.dacara.Configuration;
 import de.mwvb.dacara.ExecuteResult;
 import de.mwvb.dacara.SQLExecutor;
+import de.mwvb.dacara.db.ResultIterator;
 import de.mwvb.dacara.gui.Window;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleStringProperty;
@@ -147,7 +146,7 @@ public class MainWindowController {
 				setupColumns(data, columns);
 				addRows(data, items);
 				long time = (System.currentTimeMillis() - start) / 1000;
-				statustext = plural(items.size(), " record", " records") + " loaded, ";
+				statustext = plural(items.size(), " row", " rows") + " loaded, ";
 				timetext += ", display time: " +  plural(time, " second", " seconds");
 			} else {
 				statustext = "Records affected: " + formatNumber(data.getRecordsAffected().intValue()) + ", ";
@@ -221,7 +220,7 @@ public class MainWindowController {
 	}
 
 	private void addRows(ExecuteResult data, final ObservableList<ObservableList<String>> items) {
-		final Iterator<List<String>> iter = data.getRows();
+		final ResultIterator iter = data.getRows();
 		try {
 			int n = 0;
 			while (iter.hasNext()) {
@@ -238,13 +237,11 @@ public class MainWindowController {
 		}
 	}
 
-	private void close(final Iterator<List<String>> iter) {
-		if (iter instanceof Closeable) {
-			try {
-				((Closeable) iter).close();
-			} catch (IOException e) {
-				throw new RuntimeException(e);
-			}
+	private void close(final ResultIterator iter) {
+		try {
+			((Closeable) iter).close();
+		} catch (IOException e) {
+			throw new RuntimeException(e);
 		}
 	}
 	

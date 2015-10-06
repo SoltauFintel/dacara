@@ -1,13 +1,13 @@
-package de.mwvb.dacara.db;
+package de.mwvb.dacara.db.select;
 
-import java.io.Closeable;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
+
+import de.mwvb.dacara.db.ResultIterator;
 
 /**
  * Records iterator
@@ -16,7 +16,7 @@ import java.util.List;
  * 
  * @author Marcus Warm
  */
-public class RecordsIterator implements Iterator<List<String>>, Closeable {
+public class RecordsIterator implements ResultIterator {
     private final Connection conn;
 	private final ResultSet rs;
 	

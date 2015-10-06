@@ -13,6 +13,8 @@ import de.mwvb.dacara.Configuration;
 import de.mwvb.dacara.ExecuteResult;
 import de.mwvb.dacara.SQLExecutor;
 import de.mwvb.dacara.base.ClassFactory;
+import de.mwvb.dacara.db.describe.DescribeCE;
+import de.mwvb.dacara.db.select.SelectCE;
 
 /**
  * @author Marcus Warm
@@ -25,7 +27,7 @@ public class DacaraSQLExecutor implements SQLExecutor {
 	
 	public DacaraSQLExecutor() {
 		commandExecutors.add(new SelectCE());
-		// TODO desc command
+		commandExecutors.add(new DescribeCE());
 		// TODO tables command
 		commandExecutors.add(new UpdateCE()); // last!
 	}

@@ -2,7 +2,7 @@ package de.mwvb.dacara;
 
 import java.util.List;
 
-import de.mwvb.dacara.db.RecordsIterator;
+import de.mwvb.dacara.db.ResultIterator;
 
 /**
  * Returns records affected -or- data rows.
@@ -30,7 +30,7 @@ public abstract class ExecuteResult {
 	 * Call close() on return value in the finally block!
 	 * @return all column values of all rows
 	 */
-	public RecordsIterator getRows() {
+	public ResultIterator getRows() {
 		throw new UnsupportedOperationException();
 	}
 }

@@ -1,4 +1,4 @@
-package de.mwvb.dacara.db;
+package de.mwvb.dacara.db.select;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import de.mwvb.dacara.ExecuteResult;
+import de.mwvb.dacara.db.CommandExecutor;
 
 /**
  * Executes a command that begins with 'select'.
