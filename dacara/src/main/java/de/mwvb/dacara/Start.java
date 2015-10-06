@@ -18,7 +18,7 @@ import de.mwvb.dacara.gui.Application;
  * @author Marcus Warm
  */
 public class Start {
-	public static final String VERSION = "2.0-alpha1";
+	public static final String VERSION = "2.0-alpha2";
 	private static Injector injector = Guice.createInjector(new Dependencies());
 	
 	/**

@@ -7,6 +7,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.fxml.JavaFXBuilderFactory;
 import javafx.scene.Parent;
 import javafx.scene.Scene;
+import javafx.scene.image.Image;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 
@@ -31,6 +32,7 @@ public abstract class Window {
 	}
 	
 	public void show(Stage stage) {
+		stage.getIcons().add(new Image(getClass().getResourceAsStream(getClass().getSimpleName() + ".png")));
 		stage.setScene(new Scene(root(), width, height));
         stage.setMinHeight(minHeight);
         stage.setMinWidth(minWidth);

@@ -29,6 +29,7 @@ import javafx.scene.control.TableColumn;
 import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextArea;
+import javafx.stage.Stage;
 import javafx.util.Callback;
 
 /**
@@ -52,6 +53,10 @@ public class MainWindowController {
 	private TextArea sql;
 	@FXML
 	private Button execute;
+	@FXML
+	private Button newWindow;
+	@FXML
+	private Button biggerSQLField;
 	@FXML
 	private TableView<ObservableList<String>> grid;
 	@FXML
@@ -155,6 +160,30 @@ public class MainWindowController {
 		new Thread(task).start();
 	}
 
+	@FXML
+	protected void onNewWindow() {
+		new MainWindow().show(new Stage());
+	}
+
+	@FXML
+	protected void onBiggerSQLField() {
+		final double max = 300;
+		final double h;
+		final String text;
+		if (sql.getMaxHeight() == max) {
+			h = 100;
+			text = "SQL _bigger";
+		} else {
+			h = max;
+			text = "SQL _smaller";
+		}
+		Platform.runLater(() -> {
+			sql.setMaxHeight(h);
+			sql.setPrefHeight(h);
+			biggerSQLField.setText(text);
+		});
+	}
+	
 	private void clearTable() {
 		items.clear();
 		columns.clear();
