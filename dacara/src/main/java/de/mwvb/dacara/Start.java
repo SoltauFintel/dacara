@@ -22,7 +22,7 @@ public class Start {
 	private static Injector injector = Guice.createInjector(new Dependencies());
 	
 	/**
-	 * You need Java 8 (u40) for running this application.
+	 * You need Java 8 (u60) for running this application.
 	 * @param args none
 	 */
 	public static void main(String[] args) {
