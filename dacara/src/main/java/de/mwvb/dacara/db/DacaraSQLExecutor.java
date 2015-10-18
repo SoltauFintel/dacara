@@ -22,7 +22,15 @@ import de.mwvb.dacara.db.tables.TablesCE;
  */
 public class DacaraSQLExecutor implements SQLExecutor {
 	private final List<CommandExecutor> commandExecutors = new ArrayList<>();
-	private final ClassFactory driverFactory = new ClassFactory("drivers"); // folder with driver JAR files, e.g. postgresql-9.1-901.jdbc4.jar
+	private final ClassFactory driverFactory = new ClassFactory("drivers") { // folder with driver JAR files, e.g. postgresql-9.1-901.jdbc4.jar
+		protected void created(Object driver) {
+			try {
+				DriverManager.registerDriver(new DriverDelegator((Driver) driver)); // http://stackoverflow.com/a/14479658
+			} catch (SQLException e) {
+				throw new RuntimeException("Error registering database driver from drivers folder: " + cfg.getDriverClassName(), e);
+			}
+		}
+	};
 	@Inject
 	public Configuration cfg;
 	
@@ -67,8 +75,7 @@ public class DacaraSQLExecutor implements SQLExecutor {
 
 	private void loadDriver() {
 		try {
-			Driver driver = (Driver) driverFactory.newInstance(cfg.getDriverClassName());
-			DriverManager.registerDriver(new DriverDelegator(driver)); // http://stackoverflow.com/a/14479658
+			driverFactory.newInstance(cfg.getDriverClassName());
 		} catch (Exception e) {
 			throw new RuntimeException("Error loading database driver from drivers folder: " + cfg.getDriverClassName(), e);
 		}

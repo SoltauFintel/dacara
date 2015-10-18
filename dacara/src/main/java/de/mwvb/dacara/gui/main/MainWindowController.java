@@ -108,6 +108,7 @@ public class MainWindowController {
 		}
 	}
 	
+	// TODO It's not possible any more to read this method :-( JavaFX sucks.
 	@FXML
 	protected void onExecute() {
 		items = grid.getItems();
@@ -121,7 +122,9 @@ public class MainWindowController {
 		Task<Void> task = new Task<Void>() {
 			protected Void call() {
 				long start = System.currentTimeMillis();
-				data = logic.execute(aSQL);
+				
+				data = logic.execute(aSQL);  //     <====================================================
+				
 				loadTime = (System.currentTimeMillis() - start) / 1000;
 				return null;
 			};

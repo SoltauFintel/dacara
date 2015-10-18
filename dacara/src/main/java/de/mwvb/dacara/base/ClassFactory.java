@@ -45,8 +45,12 @@ public class ClassFactory {
 		Object i = cache.get(classname);
 		if (i == null) {
 			i = classLoader.loadClass(classname).newInstance();
+			created(i);
 			cache.put(classname, i);
 		}
 		return i;
+	}
+	
+	protected void created(Object i) {
 	}
 }
