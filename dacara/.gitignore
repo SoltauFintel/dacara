@@ -8,3 +8,4 @@ TODO.txt
 .classpath
 .project
 /.gradle/
+/build/

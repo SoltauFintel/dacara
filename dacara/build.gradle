@@ -3,7 +3,7 @@ apply plugin: 'eclipse'
 
 version = '2.1.0'
 group = 'de.mwvb'
-project.description = ''
+project.description = 'SQL tool'
 
 sourceCompatibility = 1.8
 targetCompatibility = 1.8
