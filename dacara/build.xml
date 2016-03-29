@@ -1,0 +1,15 @@
+<project name="dacara" basedir="." default="eclipse">
+	<property name="gradlebat" value="gradlew.bat"/>
+
+	<target name="build">
+		<exec executable="${gradlebat}">
+			<arg value="fatJar"/>
+		</exec>
+	</target>
+	<target name="eclipse">
+		<exec executable="${gradlebat}">
+			<arg value="eclipse"/>
+		</exec>
+	</target>
+	
+</project>

@@ -1,0 +1,29 @@
+apply plugin: 'java'
+apply plugin: 'eclipse'
+
+version = '2.1.0'
+group = 'de.mwvb'
+project.description = ''
+
+sourceCompatibility = 1.8
+targetCompatibility = 1.8
+
+repositories {
+	mavenCentral()
+}
+
+dependencies {
+	compile 'com.google.inject:guice:4.0'
+	compile 'de.mwvb:xmldocument:0.1.0'
+	testCompile 'junit:junit:4.12'
+}
+
+// Mit diesem task wird die Anwendung gebaut. Man erhaelt dann eine doppelklickbare StandAlone-JAR.
+task fatJar(type: Jar) {
+    manifest {
+        attributes 'Main-Class': 'de.mwvb.dacara.Start'
+    }
+    baseName = project.name
+    from { configurations.compile.collect { it.isDirectory() ? it : zipTree(it) } }
+    with jar
+}
